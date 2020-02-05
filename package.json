@@ -15,6 +15,7 @@
   "scripts": {
     "build": "yarn clean && tsc -p .",
     "clean": "rm -rf dist",
+    "prepublishOnly": "yarn build",
     "semantic-release": "semantic-release",
     "test": "jest"
   },
