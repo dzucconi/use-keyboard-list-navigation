@@ -1,6 +1,21 @@
 {
   "name": "use-keyboard-list-navigation",
+  "author": "Damon Zucconi",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "version": "0.0.0-development",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dzucconi/use-keyboard-list-navigation.git"
+  },
   "scripts": {
+    "build": "yarn clean && tsc -p .",
+    "clean": "rm -rf dist",
+    "semantic-release": "semantic-release",
     "test": "jest"
   },
   "peerDependencies": {
@@ -12,11 +27,18 @@
     "@testing-library/react-hooks": "3.2.1",
     "@types/jest": "25.1.1",
     "@types/react": "16.9.19",
+    "cz-conventional-changelog": "^3.1.0",
     "jest": "25.1.0",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "react-test-renderer": "16.12.0",
+    "semantic-release": "^17.0.2",
     "ts-jest": "25.2.0",
     "typescript": "3.7.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
