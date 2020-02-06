@@ -12,10 +12,13 @@ export type Action =
   | { type: "RESET" }
   | { type: "INTERACT" }
   | { type: "PREV" }
-  | { type: "NEXT" };
+  | { type: "NEXT" }
+  | { type: "FIRST" }
+  | { type: "LAST" };
 
 export interface State {
   cursor: number;
+  length: number;
   interactive: boolean;
 }
 
@@ -29,6 +32,10 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, cursor: state.cursor - 1, interactive: true };
     case "NEXT":
       return { ...state, cursor: state.cursor + 1, interactive: true };
+    case "FIRST":
+      return { ...state, cursor: 0, interactive: true };
+    case "LAST":
+      return { ...state, cursor: state.length - 1, interactive: true };
   }
 };
 
@@ -43,6 +50,7 @@ export const useKeyboardListNavigation = <T>({
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     cursor: 0,
+    length: list.length,
     interactive: false
   });
 
@@ -63,6 +71,12 @@ export const useKeyboardListNavigation = <T>({
         }
         case "Enter": {
           return onEnter(list[index], state);
+        }
+        case "Home": {
+          return dispatch({ type: "FIRST" });
+        }
+        case "End": {
+          return dispatch({ type: "LAST" });
         }
         default:
           break;

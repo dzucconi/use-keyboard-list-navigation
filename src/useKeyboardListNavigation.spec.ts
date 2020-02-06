@@ -74,6 +74,80 @@ describe("useKeyboardListNavigation", () => {
     expect(result.current.selected).toBe("fourth");
   });
 
+  it('selects the last element when the "End" key is pressed no matter where in the list one is', () => {
+    const { result } = renderHook(() =>
+      useKeyboardListNavigation({ list, onEnter: noop })
+    );
+
+    expect(result.current.cursor).toBe(0);
+    expect(result.current.index).toBe(0);
+    expect(result.current.selected).toBe("first");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "End" });
+    });
+
+    expect(result.current.cursor).toBe(3);
+    expect(result.current.index).toBe(3);
+    expect(result.current.selected).toBe("fourth");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "ArrowUp" });
+      fireEvent.keyDown(window, { key: "ArrowUp" });
+    });
+
+    expect(result.current.cursor).toBe(1);
+    expect(result.current.index).toBe(1);
+    expect(result.current.selected).toBe("second");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "End" });
+    });
+
+    expect(result.current.cursor).toBe(3);
+    expect(result.current.index).toBe(3);
+    expect(result.current.selected).toBe("fourth");
+  });
+
+  it('selects the first element when the "Home" key is pressed no matter where in the list one is', () => {
+    const { result } = renderHook(() =>
+      useKeyboardListNavigation({
+        list,
+        onEnter: noop,
+        waitForInteractive: true
+      })
+    );
+
+    expect(result.current.cursor).toBe(0);
+    expect(result.current.index).toBe(-1);
+    expect(result.current.selected).toBeUndefined();
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "Home" });
+    });
+
+    expect(result.current.cursor).toBe(0);
+    expect(result.current.index).toBe(0);
+    expect(result.current.selected).toBe("first");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "ArrowUp" });
+      fireEvent.keyDown(window, { key: "ArrowUp" });
+    });
+
+    expect(result.current.cursor).toBe(-2);
+    expect(result.current.index).toBe(2);
+    expect(result.current.selected).toBe("third");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "Home" });
+    });
+
+    expect(result.current.cursor).toBe(0);
+    expect(result.current.index).toBe(0);
+    expect(result.current.selected).toBe("first");
+  });
+
   it('calls `onEnter` with the selected items when the "Enter" key is pressed', () => {
     const onEnter = jest.fn();
     renderHook(() => useKeyboardListNavigation({ list, onEnter }));
@@ -85,6 +159,7 @@ describe("useKeyboardListNavigation", () => {
     expect(onEnter).toBeCalledTimes(1);
     expect(onEnter).toHaveBeenLastCalledWith("first", {
       cursor: 0,
+      length: 4,
       interactive: false
     });
 
@@ -100,6 +175,7 @@ describe("useKeyboardListNavigation", () => {
     expect(onEnter).toBeCalledTimes(2);
     expect(onEnter).toHaveBeenLastCalledWith("third", {
       cursor: 2,
+      length: 4,
       interactive: true
     });
   });
