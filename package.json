@@ -41,5 +41,8 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "map-cursor-to-max": "^1.0.0"
   }
 }

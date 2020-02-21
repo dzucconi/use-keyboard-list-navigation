@@ -4479,6 +4479,11 @@ map-cache@^0.2.2:
   resolved "https://registry.yarnpkg.com/map-cache/-/map-cache-0.2.2.tgz#c32abd0bd6525d9b051645bb4f26ac5dc98a0dbf"
   integrity sha1-wyq9C9ZSXZsFFkW7TyasXcmKDb8=
 
+map-cursor-to-max@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/map-cursor-to-max/-/map-cursor-to-max-1.0.0.tgz#d46fbab9429094ae586d5995f0a1d06dd3999f15"
+  integrity sha512-BBuyrvO7X3eyQGC9GJKeNeGUnF/69OAjfI4OfroIQF0CqC3cf/vnmGJyxb2oWjwasC3eEtW4JGaO/XcArp03ig==
+
 map-obj@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"

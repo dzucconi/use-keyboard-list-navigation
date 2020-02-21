@@ -1,12 +1,5 @@
-import { useCallback, useEffect, useReducer, useMemo } from "react";
-
-export const mapCursorToList = (counter: number, max: number) => {
-  if (max === 0) return 0;
-  if (counter >= 0) return counter % max;
-  const modulo = counter % max;
-  if (modulo === 0) return Math.abs(modulo); // -0
-  return modulo + max;
-};
+import { useCallback, useEffect, useReducer } from "react";
+import { mapCursorToMax } from "map-cursor-to-max";
 
 export type Action =
   | { type: "RESET" }
@@ -54,7 +47,7 @@ export const useKeyboardListNavigation = <T>({
     interactive: false
   });
 
-  const index = mapCursorToList(state.cursor, list.length);
+  const index = mapCursorToMax(state.cursor, list.length);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
