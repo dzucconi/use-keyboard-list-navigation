@@ -7,7 +7,8 @@ export type Action =
   | { type: "PREV" }
   | { type: "NEXT" }
   | { type: "FIRST" }
-  | { type: "LAST" };
+  | { type: "LAST" }
+  | { type: "SET"; payload: { cursor: number } };
 
 export interface State {
   cursor: number;
@@ -29,6 +30,8 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, cursor: 0, interactive: true };
     case "LAST":
       return { ...state, cursor: state.length - 1, interactive: true };
+    case "SET":
+      return { ...state, cursor: action.payload.cursor };
   }
 };
 
@@ -72,6 +75,22 @@ export const useKeyboardListNavigation = <T>({
           return dispatch({ type: "LAST" });
         }
         default:
+          // Set focus based on first character
+          if (/^[a-z0-9_-]$/i.test(event.key)) {
+            const node = list.find(
+              item =>
+                typeof item === "string" &&
+                item.toLowerCase().startsWith(event.key)
+            );
+
+            if (node) {
+              dispatch({
+                type: "SET",
+                payload: { cursor: list.indexOf(node) }
+              });
+            }
+          }
+
           break;
       }
     },

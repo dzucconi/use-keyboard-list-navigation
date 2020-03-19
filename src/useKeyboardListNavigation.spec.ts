@@ -145,6 +145,35 @@ describe("useKeyboardListNavigation", () => {
     expect(result.current.selected).toBe("first");
   });
 
+  it("selects the third item when the t key is pressed", () => {
+    const { result } = renderHook(() =>
+      useKeyboardListNavigation({
+        list,
+        onEnter: noop
+      })
+    );
+
+    expect(result.current.cursor).toBe(0);
+    expect(result.current.index).toBe(0);
+    expect(result.current.selected).toBe("first");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "t" });
+    });
+
+    expect(result.current.cursor).toBe(2);
+    expect(result.current.index).toBe(2);
+    expect(result.current.selected).toBe("third");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "s" });
+    });
+
+    expect(result.current.cursor).toBe(1);
+    expect(result.current.index).toBe(1);
+    expect(result.current.selected).toBe("second");
+  });
+
   it('calls `onEnter` with the selected items when the "Enter" key is pressed', () => {
     const onEnter = jest.fn();
     renderHook(() => useKeyboardListNavigation({ list, onEnter }));
