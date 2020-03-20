@@ -38,19 +38,23 @@ const reducer = (
   }
 };
 
-export const useKeyboardListNavigation = <T>({
-  list,
-  onEnter,
-  waitForInteractive = false
-}: {
+export type UseKeyboardListNavigationProps<T> = {
   list: T[];
+  waitForInteractive?: boolean;
   onEnter(
     element: T,
     state: UseKeyboardListNavigationState,
     index: number
   ): void;
-  waitForInteractive?: boolean;
-}) => {
+  extractValue?(item: T): string;
+};
+
+export const useKeyboardListNavigation = <T>({
+  list,
+  onEnter,
+  waitForInteractive = false,
+  extractValue = item => (typeof item === "string" ? item.toLowerCase() : "")
+}: UseKeyboardListNavigationProps<T>) => {
   const [state, dispatch] = useReducer(reducer, {
     cursor: 0,
     length: list.length,
@@ -84,10 +88,8 @@ export const useKeyboardListNavigation = <T>({
         default:
           // Set focus based on first character
           if (/^[a-z0-9_-]$/i.test(event.key)) {
-            const node = list.find(
-              item =>
-                typeof item === "string" &&
-                item.toLowerCase().startsWith(event.key)
+            const node = list.find(item =>
+              extractValue(item).startsWith(event.key)
             );
 
             if (node) {
