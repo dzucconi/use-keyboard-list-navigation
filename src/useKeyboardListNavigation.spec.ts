@@ -183,11 +183,15 @@ describe("useKeyboardListNavigation", () => {
     });
 
     expect(onEnter).toBeCalledTimes(1);
-    expect(onEnter).toHaveBeenLastCalledWith("first", {
-      cursor: 0,
-      length: 4,
-      interactive: false
-    });
+    expect(onEnter).toHaveBeenLastCalledWith(
+      "first",
+      {
+        cursor: 0,
+        length: 4,
+        interactive: false
+      },
+      0
+    );
 
     act(() => {
       fireEvent.keyDown(window, { key: "ArrowDown" });
@@ -199,11 +203,15 @@ describe("useKeyboardListNavigation", () => {
     });
 
     expect(onEnter).toBeCalledTimes(2);
-    expect(onEnter).toHaveBeenLastCalledWith("third", {
-      cursor: 2,
-      length: 4,
-      interactive: true
-    });
+    expect(onEnter).toHaveBeenLastCalledWith(
+      "third",
+      {
+        cursor: 2,
+        length: 4,
+        interactive: true
+      },
+      2
+    );
   });
 
   describe("waitForInteractive", () => {

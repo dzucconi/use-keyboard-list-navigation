@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer } from "react";
 import { mapCursorToMax } from "map-cursor-to-max";
 
-export type Action =
+export type UseKeyboardListNavigationAction =
   | { type: "RESET" }
   | { type: "INTERACT" }
   | { type: "PREV" }
@@ -10,13 +10,16 @@ export type Action =
   | { type: "LAST" }
   | { type: "SET"; payload: { cursor: number } };
 
-export interface State {
+export type UseKeyboardListNavigationState = {
   cursor: number;
   length: number;
   interactive: boolean;
-}
+};
 
-const reducer = (state: State, action: Action): State => {
+const reducer = (
+  state: UseKeyboardListNavigationState,
+  action: UseKeyboardListNavigationAction
+): UseKeyboardListNavigationState => {
   switch (action.type) {
     case "RESET":
       return { ...state, cursor: 0, interactive: false };
@@ -41,7 +44,11 @@ export const useKeyboardListNavigation = <T>({
   waitForInteractive = false
 }: {
   list: T[];
-  onEnter(element: T, state: State): void;
+  onEnter(
+    element: T,
+    state: UseKeyboardListNavigationState,
+    index: number
+  ): void;
   waitForInteractive?: boolean;
 }) => {
   const [state, dispatch] = useReducer(reducer, {
@@ -66,7 +73,7 @@ export const useKeyboardListNavigation = <T>({
           return dispatch({ type: "NEXT" });
         }
         case "Enter": {
-          return onEnter(list[index], state);
+          return onEnter(list[index], state, index);
         }
         case "Home": {
           return dispatch({ type: "FIRST" });
