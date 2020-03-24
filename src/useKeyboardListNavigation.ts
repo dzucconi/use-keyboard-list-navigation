@@ -77,6 +77,7 @@ export const useKeyboardListNavigation = <T>({
           return dispatch({ type: "NEXT" });
         }
         case "Enter": {
+          if (waitForInteractive && !state.interactive) break;
           return onEnter(list[index], state, index);
         }
         case "Home": {

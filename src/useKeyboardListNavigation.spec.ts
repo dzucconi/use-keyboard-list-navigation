@@ -236,5 +236,28 @@ describe("useKeyboardListNavigation", () => {
       expect(result.current.index).toBe(0);
       expect(result.current.selected).toEqual("first");
     });
+
+    it("does not trigger `onEnter` if no interaction has taken place", () => {
+      const onEnter = jest.fn();
+      const { result } = renderHook(() =>
+        useKeyboardListNavigation({ list, onEnter, waitForInteractive: true })
+      );
+
+      act(() => {
+        fireEvent.keyDown(window, { key: "Enter" });
+      });
+
+      expect(onEnter).toBeCalledTimes(0);
+
+      act(() => {
+        fireEvent.keyDown(window, { key: "ArrowDown" });
+      });
+
+      act(() => {
+        fireEvent.keyDown(window, { key: "Enter" });
+      });
+
+      expect(onEnter).toBeCalledTimes(1);
+    });
   });
 });
