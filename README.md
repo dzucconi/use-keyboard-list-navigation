@@ -19,10 +19,11 @@ import React from "react";
 import { useKeyboardListNavigation } from "use-keyboard-list-navigation";
 
 const App: React.FC = () => {
-  const list = ['one', 'two', 'three'];
+  const list = ["one", "two", "three"];
 
   const { index, cursor, interactive, selected } = useKeyboardListNavigation({
-    list, onEnter: console.log.bind(console)
+    list,
+    onEnter: console.log.bind(console)
   });
 
   return (
@@ -36,14 +37,29 @@ const App: React.FC = () => {
 ## Interface
 
 ```typescript
-const useKeyboardListNavigation: <T>({ list, onEnter, waitForInteractive }: {
+type UseKeyboardListNavigationProps<T> = {
   list: T[];
-  onEnter(element: T, state: State): void;
   waitForInteractive?: boolean | undefined;
-}) => {
+  onEnter(
+    element: T,
+    state: UseKeyboardListNavigationState,
+    index: number
+  ): void;
+  extractValue?(item: T): string;
+  ref?: React.MutableRefObject<any> | undefined;
+};
+
+const useKeyboardListNavigation: <T>({
+  list,
+  onEnter,
+  waitForInteractive,
+  ref,
+  extractValue
+}: UseKeyboardListNavigationProps<T>) => {
   index: number;
   selected: T;
   cursor: number;
+  length: number;
   interactive: boolean;
-}
+};
 ```
