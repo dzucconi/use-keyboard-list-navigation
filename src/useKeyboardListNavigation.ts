@@ -47,12 +47,14 @@ export type UseKeyboardListNavigationProps<T> = {
     index: number
   ): void;
   extractValue?(item: T): string;
+  ref?: React.MutableRefObject<any>;
 };
 
 export const useKeyboardListNavigation = <T>({
   list,
   onEnter,
   waitForInteractive = false,
+  ref,
   extractValue = item => (typeof item === "string" ? item.toLowerCase() : "")
 }: UseKeyboardListNavigationProps<T>) => {
   const [state, dispatch] = useReducer(reducer, {
@@ -108,9 +110,10 @@ export const useKeyboardListNavigation = <T>({
   );
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
+    const el = ref?.current ?? window;
+    el.addEventListener("keydown", handleKeyDown);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      el.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown]);
 

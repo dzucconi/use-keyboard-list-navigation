@@ -6,6 +6,7 @@
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
+    "strictFunctionTypes": false,
     "outDir": "./dist"
   },
   "include": ["src/**/*.ts"],

@@ -1,6 +1,7 @@
 import { renderHook, act } from "@testing-library/react-hooks";
 import { fireEvent } from "@testing-library/react";
 import { useKeyboardListNavigation } from "./useKeyboardListNavigation";
+import { useRef } from "react";
 
 describe("useKeyboardListNavigation", () => {
   const list = ["first", "second", "third", "fourth"];
@@ -212,6 +213,28 @@ describe("useKeyboardListNavigation", () => {
       },
       2
     );
+  });
+
+  it("supports a focusable ref", () => {
+    const div = document.createElement("div");
+    const { result } = renderHook(() => {
+      const ref = useRef(div);
+      return useKeyboardListNavigation({ list, ref, onEnter: noop });
+    });
+
+    expect(result.current.cursor).toBe(0);
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "ArrowDown" });
+    });
+
+    expect(result.current.cursor).toBe(0);
+
+    act(() => {
+      fireEvent.keyDown(div, { key: "ArrowDown" });
+    });
+
+    expect(result.current.cursor).toBe(1);
   });
 
   describe("waitForInteractive", () => {
