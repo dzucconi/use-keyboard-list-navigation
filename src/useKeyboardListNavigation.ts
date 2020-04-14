@@ -41,11 +41,17 @@ const reducer = (
 export type UseKeyboardListNavigationProps<T> = {
   list: T[];
   waitForInteractive?: boolean;
-  onEnter(
-    element: T,
-    state: UseKeyboardListNavigationState,
-    index: number
-  ): void;
+  onEnter({
+    event,
+    element,
+    state,
+    index,
+  }: {
+    event: KeyboardEvent;
+    element: T;
+    state: UseKeyboardListNavigationState;
+    index: number;
+  }): void;
   extractValue?(item: T): string;
   ref?: React.MutableRefObject<any>;
 };
@@ -55,12 +61,12 @@ export const useKeyboardListNavigation = <T>({
   onEnter,
   waitForInteractive = false,
   ref,
-  extractValue = item => (typeof item === "string" ? item.toLowerCase() : "")
+  extractValue = (item) => (typeof item === "string" ? item.toLowerCase() : ""),
 }: UseKeyboardListNavigationProps<T>) => {
   const [state, dispatch] = useReducer(reducer, {
     cursor: 0,
     length: list.length,
-    interactive: false
+    interactive: false,
   });
 
   const index = mapCursorToMax(state.cursor, list.length);
@@ -80,7 +86,8 @@ export const useKeyboardListNavigation = <T>({
         }
         case "Enter": {
           if (waitForInteractive && !state.interactive) break;
-          return onEnter(list[index], state, index);
+          console.log("passing event", event);
+          return onEnter({ event, element: list[index], state, index });
         }
         case "Home": {
           return dispatch({ type: "FIRST" });
@@ -91,14 +98,14 @@ export const useKeyboardListNavigation = <T>({
         default:
           // Set focus based on first character
           if (/^[a-z0-9_-]$/i.test(event.key)) {
-            const node = list.find(item =>
+            const node = list.find((item) =>
               extractValue(item).startsWith(event.key)
             );
 
             if (node) {
               dispatch({
                 type: "SET",
-                payload: { cursor: list.indexOf(node) }
+                payload: { cursor: list.indexOf(node) },
               });
             }
           }
@@ -125,6 +132,6 @@ export const useKeyboardListNavigation = <T>({
   return {
     ...state,
     index: interactiveIndex,
-    selected: list[interactiveIndex]
+    selected: list[interactiveIndex],
   };
 };

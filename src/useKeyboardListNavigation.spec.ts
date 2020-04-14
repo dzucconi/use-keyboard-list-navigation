@@ -112,7 +112,7 @@ describe("useKeyboardListNavigation", () => {
       useKeyboardListNavigation({
         list,
         onEnter: noop,
-        waitForInteractive: true
+        waitForInteractive: true,
       })
     );
 
@@ -150,7 +150,7 @@ describe("useKeyboardListNavigation", () => {
     const { result } = renderHook(() =>
       useKeyboardListNavigation({
         list,
-        onEnter: noop
+        onEnter: noop,
       })
     );
 
@@ -184,15 +184,12 @@ describe("useKeyboardListNavigation", () => {
     });
 
     expect(onEnter).toBeCalledTimes(1);
-    expect(onEnter).toHaveBeenLastCalledWith(
-      "first",
-      {
-        cursor: 0,
-        length: 4,
-        interactive: false
-      },
-      0
-    );
+    expect(onEnter).toHaveBeenCalledWith({
+      element: "first",
+      event: expect.anything(),
+      index: 0,
+      state: { cursor: 0, interactive: false, length: 4 },
+    });
 
     act(() => {
       fireEvent.keyDown(window, { key: "ArrowDown" });
@@ -204,15 +201,12 @@ describe("useKeyboardListNavigation", () => {
     });
 
     expect(onEnter).toBeCalledTimes(2);
-    expect(onEnter).toHaveBeenLastCalledWith(
-      "third",
-      {
-        cursor: 2,
-        length: 4,
-        interactive: true
-      },
-      2
-    );
+    expect(onEnter).toHaveBeenLastCalledWith({
+      element: "third",
+      event: expect.anything(),
+      index: 2,
+      state: { cursor: 2, interactive: true, length: 4 },
+    });
   });
 
   it("supports a focusable ref", () => {
@@ -243,7 +237,7 @@ describe("useKeyboardListNavigation", () => {
         useKeyboardListNavigation({
           list,
           onEnter: noop,
-          waitForInteractive: true
+          waitForInteractive: true,
         })
       );
 
