@@ -86,7 +86,6 @@ export const useKeyboardListNavigation = <T>({
         }
         case "Enter": {
           if (waitForInteractive && !state.interactive) break;
-          console.log("passing event", event);
           return onEnter({ event, element: list[index], state, index });
         }
         case "Home": {
