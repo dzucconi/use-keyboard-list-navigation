@@ -15,19 +15,22 @@ yarn add use-keyboard-list-navigation
 ## Usage
 
 ```javascript
-import React from "react";
+import React, { useRef } from "react";
 import { useKeyboardListNavigation } from "use-keyboard-list-navigation";
 
 const App: React.FC = () => {
   const list = ["one", "two", "three"];
+  const ref = useRef<HTMLInputElement | null>(null)
 
   const { index, cursor, interactive, selected } = useKeyboardListNavigation({
     list,
     onEnter: console.log.bind(console)
+    ref // Optionally add a ref to trap focus
   });
 
   return (
     <pre>
+      <input ref={ref} />
       <code>{JSON.stringify({ index, cursor, interactive, selected })}</code>
     </pre>
   );
@@ -54,7 +57,7 @@ const useKeyboardListNavigation: <T>({
   onEnter,
   waitForInteractive,
   ref,
-  extractValue
+  extractValue,
 }: UseKeyboardListNavigationProps<T>) => {
   index: number;
   selected: T;
