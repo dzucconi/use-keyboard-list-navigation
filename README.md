@@ -23,7 +23,7 @@ const App: React.FC = () => {
 
   const { index, cursor, interactive, selected } = useKeyboardListNavigation({
     list,
-    onEnter: console.log.bind(console)
+    onEnter: console.log.bind(console),
   });
 
   return (
@@ -38,23 +38,31 @@ const App: React.FC = () => {
 
 ```typescript
 type UseKeyboardListNavigationProps<T> = {
+  ref?: React.MutableRefObject<any> | undefined;
   list: T[];
   waitForInteractive?: boolean | undefined;
-  onEnter(
-    element: T,
-    state: UseKeyboardListNavigationState,
-    index: number
-  ): void;
+  defaultValue?: T | undefined;
+  onEnter({
+    event,
+    element,
+    state,
+    index,
+  }: {
+    event: KeyboardEvent;
+    element: T;
+    state: UseKeyboardListNavigationState;
+    index: number;
+  }): void;
   extractValue?(item: T): string;
-  ref?: React.MutableRefObject<any> | undefined;
 };
 
 const useKeyboardListNavigation: <T>({
-  list,
-  onEnter,
-  waitForInteractive,
   ref,
-  extractValue
+  list,
+  waitForInteractive,
+  defaultValue,
+  onEnter,
+  extractValue,
 }: UseKeyboardListNavigationProps<T>) => {
   index: number;
   selected: T;
