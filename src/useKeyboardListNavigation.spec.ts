@@ -19,6 +19,16 @@ describe("useKeyboardListNavigation", () => {
     expect(result.current.selected).toBe("first");
   });
 
+  it("selects the defaultValue by default", () => {
+    const { result } = renderHook(() =>
+      useKeyboardListNavigation({ list, defaultValue: "second", onEnter: noop })
+    );
+
+    expect(result.current.cursor).toBe(1);
+    expect(result.current.index).toBe(1);
+    expect(result.current.selected).toBe("second");
+  });
+
   it('selects the second element when the "ArrowDown" key is pressed', () => {
     const { result } = renderHook(() =>
       useKeyboardListNavigation({ list, onEnter: noop })

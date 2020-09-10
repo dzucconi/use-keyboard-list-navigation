@@ -16,13 +16,13 @@ export type UseKeyboardListNavigationState = {
   interactive: boolean;
 };
 
-const reducer = (
+const reducer = (defaults: { cursor: number }) => (
   state: UseKeyboardListNavigationState,
   action: UseKeyboardListNavigationAction
 ): UseKeyboardListNavigationState => {
   switch (action.type) {
     case "RESET":
-      return { ...state, interactive: false };
+      return { ...state, interactive: false, cursor: defaults.cursor };
     case "INTERACT":
       return { ...state, interactive: true };
     case "PREV":
@@ -39,8 +39,10 @@ const reducer = (
 };
 
 export type UseKeyboardListNavigationProps<T> = {
+  ref?: React.MutableRefObject<any>;
   list: T[];
   waitForInteractive?: boolean;
+  defaultValue?: T;
   onEnter({
     event,
     element,
@@ -53,20 +55,21 @@ export type UseKeyboardListNavigationProps<T> = {
     index: number;
   }): void;
   extractValue?(item: T): string;
-  ref?: React.MutableRefObject<any>;
 };
 
 const IDLE_TIMEOUT_MS = 1000;
 
 export const useKeyboardListNavigation = <T>({
-  list,
-  onEnter,
-  waitForInteractive = false,
   ref,
+  list,
+  waitForInteractive = false,
+  defaultValue,
+  onEnter,
   extractValue = (item) => (typeof item === "string" ? item.toLowerCase() : ""),
 }: UseKeyboardListNavigationProps<T>) => {
-  const [state, dispatch] = useReducer(reducer, {
-    cursor: 0,
+  const defaultCursor = defaultValue ? list.indexOf(defaultValue) : 0;
+  const [state, dispatch] = useReducer(reducer({ cursor: defaultCursor }), {
+    cursor: defaultCursor,
     length: list.length,
     interactive: false,
   });
