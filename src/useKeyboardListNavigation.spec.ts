@@ -3,6 +3,8 @@ import { fireEvent } from "@testing-library/react";
 import { useKeyboardListNavigation } from "./useKeyboardListNavigation";
 import { useRef } from "react";
 
+jest.useFakeTimers();
+
 describe("useKeyboardListNavigation", () => {
   const list = ["first", "second", "third", "fourth"];
   const noop = () => {};
@@ -146,7 +148,46 @@ describe("useKeyboardListNavigation", () => {
     expect(result.current.selected).toBe("first");
   });
 
-  it("selects the third item when the t key is pressed", () => {
+  it("selects the third item when the t key is pressed; then narrows down into the fifth once more is typed", () => {
+    const { result } = renderHook(() =>
+      useKeyboardListNavigation({
+        list: ["first", "second", "third", "fourth", "thirteenth"],
+        onEnter: noop,
+      })
+    );
+
+    expect(result.current.cursor).toBe(0);
+    expect(result.current.index).toBe(0);
+    expect(result.current.selected).toBe("first");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "t" });
+    });
+
+    expect(result.current.cursor).toBe(2);
+    expect(result.current.index).toBe(2);
+    expect(result.current.selected).toBe("third");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "h" });
+      fireEvent.keyDown(window, { key: "i" });
+      fireEvent.keyDown(window, { key: "r" });
+    });
+
+    expect(result.current.cursor).toBe(2);
+    expect(result.current.index).toBe(2);
+    expect(result.current.selected).toBe("third");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "t" });
+    });
+
+    expect(result.current.cursor).toBe(4);
+    expect(result.current.index).toBe(4);
+    expect(result.current.selected).toBe("thirteenth");
+  });
+
+  it("selects the third item when the t key is pressed; after one second, selects the second item when the s key is pressed", () => {
     const { result } = renderHook(() =>
       useKeyboardListNavigation({
         list,
@@ -161,6 +202,8 @@ describe("useKeyboardListNavigation", () => {
     act(() => {
       fireEvent.keyDown(window, { key: "t" });
     });
+
+    jest.runAllTimers();
 
     expect(result.current.cursor).toBe(2);
     expect(result.current.index).toBe(2);

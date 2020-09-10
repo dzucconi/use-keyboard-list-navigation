@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import { mapCursorToMax } from "map-cursor-to-max";
 
 export type UseKeyboardListNavigationAction =
@@ -22,7 +22,7 @@ const reducer = (
 ): UseKeyboardListNavigationState => {
   switch (action.type) {
     case "RESET":
-      return { ...state, cursor: 0, interactive: false };
+      return { ...state, interactive: false };
     case "INTERACT":
       return { ...state, interactive: true };
     case "PREV":
@@ -56,6 +56,8 @@ export type UseKeyboardListNavigationProps<T> = {
   ref?: React.MutableRefObject<any>;
 };
 
+const IDLE_TIMEOUT_MS = 1000;
+
 export const useKeyboardListNavigation = <T>({
   list,
   onEnter,
@@ -68,6 +70,9 @@ export const useKeyboardListNavigation = <T>({
     length: list.length,
     interactive: false,
   });
+
+  const searchTerm = useRef("");
+  const idleTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const index = mapCursorToMax(state.cursor, list.length);
 
@@ -95,10 +100,12 @@ export const useKeyboardListNavigation = <T>({
           return dispatch({ type: "LAST" });
         }
         default:
-          // Set focus based on first character
+          // Set focus based on search term
           if (/^[a-z0-9_-]$/i.test(event.key)) {
+            searchTerm.current = `${searchTerm.current}${event.key}`;
+
             const node = list.find((item) =>
-              extractValue(item).startsWith(event.key)
+              extractValue(item).startsWith(searchTerm.current)
             );
 
             if (node) {
@@ -107,12 +114,18 @@ export const useKeyboardListNavigation = <T>({
                 payload: { cursor: list.indexOf(node) },
               });
             }
+
+            if (idleTimeout.current) clearTimeout(idleTimeout.current);
+
+            idleTimeout.current = setTimeout(() => {
+              searchTerm.current = "";
+            }, IDLE_TIMEOUT_MS);
           }
 
           break;
       }
     },
-    [index, list, onEnter, state, waitForInteractive]
+    [index, list, onEnter, state, waitForInteractive, extractValue]
   );
 
   useEffect(() => {
@@ -121,7 +134,7 @@ export const useKeyboardListNavigation = <T>({
     return () => {
       el.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleKeyDown]);
+  }, [handleKeyDown, ref, idleTimeout]);
 
   useEffect(() => dispatch({ type: "RESET" }), [list.length]);
 
