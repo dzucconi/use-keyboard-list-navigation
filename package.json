@@ -24,7 +24,7 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
-    "@testing-library/react": "11.0.2",
+    "@testing-library/react": "11.2.3",
     "@testing-library/react-hooks": "3.4.1",
     "@types/jest": "26.0.13",
     "@types/react": "16.9.49",
