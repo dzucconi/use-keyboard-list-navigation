@@ -75,7 +75,7 @@ export const useKeyboardListNavigation = <T>({
   });
 
   const searchTerm = useRef("");
-  const idleTimeout = useRef<NodeJS.Timeout | null>(null);
+  const idleTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const index = mapCursorToMax(state.cursor, list.length);
 
