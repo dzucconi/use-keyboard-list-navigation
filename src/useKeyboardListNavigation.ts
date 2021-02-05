@@ -43,6 +43,7 @@ export type UseKeyboardListNavigationProps<T> = {
   list: T[];
   waitForInteractive?: boolean;
   defaultValue?: T;
+  bindAxis?: "vertical" | "horizontal" | "both";
   onEnter({
     event,
     element,
@@ -64,6 +65,7 @@ export const useKeyboardListNavigation = <T>({
   list,
   waitForInteractive = false,
   defaultValue,
+  bindAxis = "vertical",
   onEnter,
   extractValue = (item) => (typeof item === "string" ? item.toLowerCase() : ""),
 }: UseKeyboardListNavigationProps<T>) => {
@@ -81,16 +83,35 @@ export const useKeyboardListNavigation = <T>({
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
+      const handleUp = () => {
+        event.preventDefault();
+        return dispatch({ type: "PREV" });
+      };
+
+      const handleDown = () => {
+        event.preventDefault();
+        if (waitForInteractive && !state.interactive) {
+          return dispatch({ type: "INTERACT" });
+        }
+        return dispatch({ type: "NEXT" });
+      };
+
       switch (event.key) {
         case "ArrowUp": {
-          event.preventDefault();
-          return dispatch({ type: "PREV" });
+          if (bindAxis === "horizontal") return;
+          return handleUp();
         }
         case "ArrowDown": {
-          event.preventDefault();
-          if (waitForInteractive && !state.interactive)
-            return dispatch({ type: "INTERACT" });
-          return dispatch({ type: "NEXT" });
+          if (bindAxis === "horizontal") return;
+          return handleDown();
+        }
+        case "ArrowLeft": {
+          if (bindAxis === "vertical") return;
+          return handleUp();
+        }
+        case "ArrowRight": {
+          if (bindAxis === "vertical") return;
+          return handleDown();
         }
         case "Enter": {
           if (waitForInteractive && !state.interactive) break;
