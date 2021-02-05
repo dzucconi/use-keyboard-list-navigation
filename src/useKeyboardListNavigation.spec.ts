@@ -330,4 +330,66 @@ describe("useKeyboardListNavigation", () => {
       expect(onEnter).toBeCalledTimes(1);
     });
   });
+
+  describe("bindAxis", () => {
+    it("supports the horizontal axis", () => {
+      const { result } = renderHook(() =>
+        useKeyboardListNavigation({
+          list,
+          onEnter: noop,
+          bindAxis: "horizontal",
+        })
+      );
+
+      expect(result.current.cursor).toBe(0);
+      expect(result.current.index).toBe(0);
+      expect(result.current.selected).toBe("first");
+
+      act(() => {
+        fireEvent.keyDown(window, { key: "ArrowRight" });
+      });
+
+      expect(result.current.cursor).toBe(1);
+      expect(result.current.index).toBe(1);
+      expect(result.current.selected).toBe("second");
+
+      act(() => {
+        fireEvent.keyDown(window, { key: "ArrowLeft" });
+      });
+
+      expect(result.current.cursor).toBe(0);
+      expect(result.current.index).toBe(0);
+      expect(result.current.selected).toBe("first");
+    });
+
+    it("supports both axes", () => {
+      const { result } = renderHook(() =>
+        useKeyboardListNavigation({
+          list,
+          onEnter: noop,
+          bindAxis: "both",
+        })
+      );
+
+      expect(result.current.cursor).toBe(0);
+      expect(result.current.index).toBe(0);
+      expect(result.current.selected).toBe("first");
+
+      act(() => {
+        fireEvent.keyDown(window, { key: "ArrowRight" });
+      });
+
+      expect(result.current.cursor).toBe(1);
+      expect(result.current.index).toBe(1);
+      expect(result.current.selected).toBe("second");
+
+      act(() => {
+        fireEvent.keyDown(window, { key: "ArrowUp" });
+      });
+
+      expect(result.current.cursor).toBe(0);
+      expect(result.current.index).toBe(0);
+      expect(result.current.selected).toBe("first");
+    });
+  });
 });

@@ -42,6 +42,7 @@ type UseKeyboardListNavigationProps<T> = {
   list: T[];
   waitForInteractive?: boolean | undefined;
   defaultValue?: T | undefined;
+  bindAxis?: "vertical" | "horizontal" | "both" | undefined;
   onEnter({
     event,
     element,
