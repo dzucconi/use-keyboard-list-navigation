@@ -392,4 +392,57 @@ describe("useKeyboardListNavigation", () => {
       expect(result.current.selected).toBe("first");
     });
   });
+
+  it("exposes a reset function that resets the state", () => {
+    const { result } = renderHook(() =>
+      useKeyboardListNavigation({ list, onEnter: noop })
+    );
+
+    expect(result.current.cursor).toBe(0);
+    expect(result.current.index).toBe(0);
+    expect(result.current.selected).toBe("first");
+
+    act(() => {
+      fireEvent.keyDown(window, { key: "ArrowDown" });
+      fireEvent.keyDown(window, { key: "ArrowDown" });
+    });
+
+    expect(result.current.cursor).toBe(2);
+    expect(result.current.index).toBe(2);
+    expect(result.current.selected).toBe("third");
+
+    act(() => {
+      result.current.reset();
+    });
+
+    expect(result.current.cursor).toBe(0);
+    expect(result.current.index).toBe(0);
+    expect(result.current.selected).toBe("first");
+  });
+
+  it("exposes a setCursor function that allows for updating the cursor manually", () => {
+    const { result } = renderHook(() =>
+      useKeyboardListNavigation({ list, onEnter: noop })
+    );
+
+    expect(result.current.cursor).toBe(0);
+    expect(result.current.index).toBe(0);
+    expect(result.current.selected).toBe("first");
+
+    act(() => {
+      result.current.setCursor(2);
+    });
+
+    expect(result.current.cursor).toBe(2);
+    expect(result.current.index).toBe(2);
+    expect(result.current.selected).toBe("third");
+
+    act(() => {
+      result.current.setCursor(-1);
+    });
+
+    expect(result.current.cursor).toBe(-1);
+    expect(result.current.index).toBe(3);
+    expect(result.current.selected).toBe("fourth");
+  });
 });

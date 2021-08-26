@@ -16,27 +16,29 @@ export type UseKeyboardListNavigationState = {
   interactive: boolean;
 };
 
-const reducer = (defaults: { cursor: number }) => (
-  state: UseKeyboardListNavigationState,
-  action: UseKeyboardListNavigationAction
-): UseKeyboardListNavigationState => {
-  switch (action.type) {
-    case "RESET":
-      return { ...state, interactive: false, cursor: defaults.cursor };
-    case "INTERACT":
-      return { ...state, interactive: true };
-    case "PREV":
-      return { ...state, cursor: state.cursor - 1, interactive: true };
-    case "NEXT":
-      return { ...state, cursor: state.cursor + 1, interactive: true };
-    case "FIRST":
-      return { ...state, cursor: 0, interactive: true };
-    case "LAST":
-      return { ...state, cursor: state.length - 1, interactive: true };
-    case "SET":
-      return { ...state, cursor: action.payload.cursor };
-  }
-};
+const reducer =
+  (defaults: { cursor: number }) =>
+  (
+    state: UseKeyboardListNavigationState,
+    action: UseKeyboardListNavigationAction
+  ): UseKeyboardListNavigationState => {
+    switch (action.type) {
+      case "RESET":
+        return { ...state, interactive: false, cursor: defaults.cursor };
+      case "INTERACT":
+        return { ...state, interactive: true };
+      case "PREV":
+        return { ...state, cursor: state.cursor - 1, interactive: true };
+      case "NEXT":
+        return { ...state, cursor: state.cursor + 1, interactive: true };
+      case "FIRST":
+        return { ...state, cursor: 0, interactive: true };
+      case "LAST":
+        return { ...state, cursor: state.length - 1, interactive: true };
+      case "SET":
+        return { ...state, cursor: action.payload.cursor };
+    }
+  };
 
 export type UseKeyboardListNavigationProps<T> = {
   ref?: React.MutableRefObject<any>;
@@ -165,9 +167,19 @@ export const useKeyboardListNavigation = <T>({
   const interactiveIndex =
     waitForInteractive && !state.interactive ? -1 : index;
 
+  const reset = () => {
+    dispatch({ type: "RESET" });
+  };
+
+  const setCursor = (cursor: number) => {
+    dispatch({ type: "SET", payload: { cursor } });
+  };
+
   return {
     ...state,
     index: interactiveIndex,
     selected: list[interactiveIndex],
+    reset,
+    setCursor,
   };
 };
