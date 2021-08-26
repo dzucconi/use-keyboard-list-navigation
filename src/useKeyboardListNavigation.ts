@@ -8,7 +8,7 @@ export type UseKeyboardListNavigationAction =
   | { type: "NEXT" }
   | { type: "FIRST" }
   | { type: "LAST" }
-  | { type: "SET"; payload: { cursor: number } };
+  | { type: "SET"; payload: { cursor?: number; interactive?: boolean } };
 
 export type UseKeyboardListNavigationState = {
   cursor: number;
@@ -36,7 +36,7 @@ const reducer =
       case "LAST":
         return { ...state, cursor: state.length - 1, interactive: true };
       case "SET":
-        return { ...state, cursor: action.payload.cursor };
+        return { ...state, ...action.payload };
     }
   };
 
@@ -171,8 +171,8 @@ export const useKeyboardListNavigation = <T>({
     dispatch({ type: "RESET" });
   };
 
-  const setCursor = (cursor: number) => {
-    dispatch({ type: "SET", payload: { cursor } });
+  const set = (payload: { cursor?: number; interactive?: boolean }) => {
+    dispatch({ type: "SET", payload });
   };
 
   return {
@@ -180,6 +180,6 @@ export const useKeyboardListNavigation = <T>({
     index: interactiveIndex,
     selected: list[interactiveIndex],
     reset,
-    setCursor,
+    set,
   };
 };

@@ -420,7 +420,7 @@ describe("useKeyboardListNavigation", () => {
     expect(result.current.selected).toBe("first");
   });
 
-  it("exposes a setCursor function that allows for updating the cursor manually", () => {
+  it("exposes a set function that allows for updating the cursor manually", () => {
     const { result } = renderHook(() =>
       useKeyboardListNavigation({ list, onEnter: noop })
     );
@@ -430,7 +430,7 @@ describe("useKeyboardListNavigation", () => {
     expect(result.current.selected).toBe("first");
 
     act(() => {
-      result.current.setCursor(2);
+      result.current.set({ cursor: 2 });
     });
 
     expect(result.current.cursor).toBe(2);
@@ -438,7 +438,7 @@ describe("useKeyboardListNavigation", () => {
     expect(result.current.selected).toBe("third");
 
     act(() => {
-      result.current.setCursor(-1);
+      result.current.set({ cursor: -1 });
     });
 
     expect(result.current.cursor).toBe(-1);
