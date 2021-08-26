@@ -1,6 +1,6 @@
 # use-keyboard-list-navigation
 
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release) [![npm](https://img.shields.io/npm/v/use-keyboard-list-navigation)](https://www.npmjs.com/package/use-keyboard-list-navigation) [![Build Status](https://travis-ci.org/dzucconi/use-keyboard-list-navigation.svg?branch=master)](https://travis-ci.org/dzucconi/use-keyboard-list-navigation)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release) [![npm](https://img.shields.io/npm/v/use-keyboard-list-navigation)](https://www.npmjs.com/package/use-keyboard-list-navigation) [![Build Status](https://travis-ci.com/dzucconi/use-keyboard-list-navigation.svg?branch=master)](https://app.travis-ci.com/github/dzucconi/use-keyboard-list-navigation)
 
 ## What is this?
 
