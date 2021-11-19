@@ -167,13 +167,16 @@ export const useKeyboardListNavigation = <T>({
   const interactiveIndex =
     waitForInteractive && !state.interactive ? -1 : index;
 
-  const reset = () => {
+  const reset = useCallback(() => {
     dispatch({ type: "RESET" });
-  };
+  }, []);
 
-  const set = (payload: { cursor?: number; interactive?: boolean }) => {
-    dispatch({ type: "SET", payload });
-  };
+  const set = useCallback(
+    (payload: { cursor?: number; interactive?: boolean }) => {
+      dispatch({ type: "SET", payload });
+    },
+    []
+  );
 
   return {
     ...state,
