@@ -116,7 +116,6 @@ export const useKeyboardListNavigation = <T>({
           return handleDown();
         }
         case "Enter": {
-          if (waitForInteractive && !state.interactive) break;
           return onEnter({ event, element: list[index], state, index });
         }
         case "Home": {
